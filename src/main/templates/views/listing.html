@@ -1,0 +1,104 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block 'title' %}
+<title>AutoMax .
+    {{ listing.model }} Listing
+</title>
+{% endblock %}
+{% block 'body' %}
+<main>
+    <section class="container col-xxl-8 px-4 py-5">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+            <div class="col-10 col-sm-8 col-lg-6">
+                <img src="{{ listing.image.url }}" class="d-block mx-lg-auto img-fluid" width="1920" height="1080"
+                    loading="lazy">
+            </div>
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold lh-1 mb-3">{{ listing.model }}</h1>
+                <p class="lead">{{ listing.seller.user.username }} - {{ listing.updated_at }}</p>
+            </div>
+        </div>
+    </section>
+    <div class="bg-light">
+        <div class="container px-4 py-5">
+            <h2 class="mb-3 border-bottom" style="color: black">Auto Information</h2>
+            <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+                <div class="col-lg-8">
+                    <div class="table-responsive">
+                        <table class="table text-center">
+                            <tbody>
+                                <tr>
+                                    <th scope="row" class="text-start">Brand</th>
+                                    <td> {{listing.brand|capfirst }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="text-start">Vin</th>
+                                    <td> {{listing.vin }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="text-start">Mileage</th>
+                                    <td> {{listing.mileage }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="text-start">Color</th>
+                                    <td> {{listing.color }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="text-start">Engine</th>
+                                    <td> {{listing.engine }}</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" class="text-start">Transmisson</th>
+                                    <td> {{listing.transmisson|capfirst }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card mb-4 rounded-3 shadow-sm">
+                        <div class="card-header py-3">
+                            <h4 class="my-0 fw-normal">Location</h4>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-unstyled mt-3 mb-4">
+                                <li>{{ listing.location.city }}, {{ listing.location.state }},
+                                    {{listing.location.zip_code }} </li>
+                            </ul>
+                            <button
+                                class="w-100 btn btn-lg btn-outline-primary my-3">{{listing.seller.phone_number}}</button>
+                            <button id="sendEmail" class="w-100 btn btn-lg btn-outline-primary">Send Email</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container px-4 py-5">
+            <div class="row g-4 py-5">
+                <div class="col d-flex align-items-start">
+                    <div>
+                        <h2 class="mb-3 border-bottom" style="color: black">Description</h2>
+                        <p> {{ listing.description }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    $("#sendEmail").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'inquire_listing' id=listing.id %}",
+            data: { 'csrfmiddlewaretoken': '{{ csrf_token }}' },
+            dataType: "json",
+            success: function (r) {
+                alert("Email sent successfully!")
+            },
+            error: function (rs, e) {
+                alert(rs.info)
+            }
+        })
+    });
+</script>
+{% endblock %}
