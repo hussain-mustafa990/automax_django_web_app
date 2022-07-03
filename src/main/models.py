@@ -1,4 +1,3 @@
-from turtle import color
 import uuid
 from django.db import models
 
